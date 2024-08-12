@@ -11,6 +11,7 @@ struct cliente{
 	int codigo;
 	string nome;
 	string endereco;
+	int status;
 };
 
 struct index{
@@ -31,9 +32,10 @@ void inclusaoClientes(cliente arq[], index idx[], int &qtdRegistros){
 	arq[qtdRegistros].codigo = codigo;
 	arq[qtdRegistros].nome = nome;
 	arq[qtdRegistros].endereco = endereco;
+	arq[qtdRegistros].status = 0;
 
 	
-	for(i = qtdRegistros-1; idx[i].codigo > codigo; i--){
+	for(i = qtdRegistros-1; i <= 0 && idx[i].codigo > codigo; i--){
 		idx[i+1].codigo = idx[i].codigo;
 		idx[i+1].endereco = idx[i].endereco;
 	}
@@ -44,6 +46,31 @@ void inclusaoClientes(cliente arq[], index idx[], int &qtdRegistros){
 	
 }
 
+int exclusaoClientes(index vetIndex[], cliente vetClientes[], int qtdRegistros) {
+	int cod;
+	
+	cout << "\nDigite o codigo do cadastro a ser excluido: ";
+	cin >> cod;
+	
+    int i = 0, f = qtdRegistros - 1;
+    int m = (i + f) / 2;
+    for (; f >= i && cod != vetIndex[m].codigo; m = (i + f) / 2){
+        if (cod > vetIndex[m].codigo)
+            i = m + 1;
+        else
+            f = m - 1;
+    }
+    if (cod == vetIndex[m].codigo){
+     	vetClientes[m].status = 1;
+     	cout << "\nRegistro excluido com sucesso" << endl;
+      
+    }
+    else
+       cout << "\nCliente nao encontrado " << endl;
+    
+
+}
+
 void mostrarClientes(cliente vetorClientes[], int qtdRegistros) {
     cout << "=== CLIENTES ===" << endl;
     for (int i = 0; i < qtdRegistros; i++) {
@@ -51,9 +78,27 @@ void mostrarClientes(cliente vetorClientes[], int qtdRegistros) {
         cout << "Codigo: " << vetorClientes[i].codigo << endl;
         cout << "Nome: " << vetorClientes[i].nome << endl;
         cout << "Endereco: " << vetorClientes[i].endereco << endl;
+        cout << "Status: " << vetorClientes[i].status << endl;
         cout << endl;
     }
 }
+
+void mostrarClientesAtivos(index indexClientes[], cliente vetorClientes[], int qtdRegistros) {
+	int i = 0;
+    cout << "=== CLIENTES ===" << endl;
+    while(i < qtdRegistros){
+    	if(vetorClientes[i].status == 0){	
+        	cout << "**Registro " << i + 1 << "**" << endl;
+        	cout << "Codigo: " << vetorClientes[i].codigo << endl;
+        	cout << "Nome: " << vetorClientes[i].nome << endl;
+        	cout << "Endereco: " << vetorClientes[i].endereco << endl;
+        	cout << endl;
+        	
+        	i++;
+    	}else i++;
+	}
+}
+
 
 void mostrarIndex(index vetIndex[], int qtdRegistros) {
     cout << "=== IDX COD CLIENTES ===" << endl;
@@ -69,11 +114,11 @@ int main(){
 	int qtdRegistros = 5;
 	
 	cliente clientes[T] = {
-	{1, "Joao", "J"},
-	{2, "Maria", "M"},
-	{7, "Jose", "J"},
-	{3, "Pedro", "p"},
-	{5, "Fernanda", "F"},
+	{1, "Joao", "J", 0},
+	{2, "Maria", "M", 0},
+	{7, "Jose", "J", 0},
+	{3, "Pedro", "p", 0},
+	{5, "Fernanda", "F", 0},
 	};
 	 
 	index indexCodClientes[T] = {
@@ -84,13 +129,17 @@ int main(){
 	{7,2},
 	};
 	
-	mostrarIndex(indexCodClientes, qtdRegistros);
+	/*mostrarIndex(indexCodClientes, qtdRegistros);
 	
 	inclusaoClientes(clientes, indexCodClientes, qtdRegistros);
 	system("cls");
 	
 	mostrarClientes(clientes, qtdRegistros);
-	mostrarIndex(indexCodClientes, qtdRegistros);
+	mostrarIndex(indexCodClientes, qtdRegistros);*/
+	
+	exclusaoClientes(indexCodClientes, clientes, qtdRegistros);
+	mostrarClientes(clientes, qtdRegistros);
+	mostrarClientesAtivos(clientes, qtdRegistros);
 	
 	
 }
