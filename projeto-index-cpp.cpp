@@ -61,7 +61,7 @@ int exclusaoClientes(index vetIndex[], cliente vetClientes[], int qtdRegistros) 
             f = m - 1;
     }
     if (cod == vetIndex[m].codigo){
-     	vetClientes[m].status = 1;
+     	vetClientes[vetIndex[m].endereco].status = 1;
      	cout << "\nRegistro excluido com sucesso" << endl;
       
     }
@@ -87,11 +87,11 @@ void mostrarClientesAtivos(index indexClientes[], cliente vetorClientes[], int q
 	int i = 0;
     cout << "=== CLIENTES ===" << endl;
     while(i < qtdRegistros){
-    	if(vetorClientes[i].status == 0){	
+    	if(vetorClientes[indexClientes[i].endereco].status == 0){	
         	cout << "**Registro " << i + 1 << "**" << endl;
-        	cout << "Codigo: " << vetorClientes[i].codigo << endl;
-        	cout << "Nome: " << vetorClientes[i].nome << endl;
-        	cout << "Endereco: " << vetorClientes[i].endereco << endl;
+        	cout << "Codigo: " << vetorClientes[indexClientes[i].endereco].codigo << endl;
+        	cout << "Nome: " << vetorClientes[indexClientes[i].endereco].nome << endl;
+        	cout << "Endereco: " << vetorClientes[indexClientes[i].endereco].endereco << endl;
         	cout << endl;
         	
         	i++;
@@ -139,7 +139,7 @@ int main(){
 	
 	exclusaoClientes(indexCodClientes, clientes, qtdRegistros);
 	mostrarClientes(clientes, qtdRegistros);
-	mostrarClientesAtivos(clientes, qtdRegistros);
+	mostrarClientesAtivos(indexCodClientes, clientes, qtdRegistros);
 	
 	
 }
