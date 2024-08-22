@@ -120,15 +120,24 @@ void reorganizacaoCliente(index vetIndex[], cliente vetClientes[], int &qtdRegis
 			cliAtualizado[cont].endereco = vetClientes[vetIndex[i].endereco].endereco;
 			cliAtualizado[cont].status = vetClientes[vetIndex[i].endereco].status;	
 			
-			indexAtualizado[cont].codigo = vetIndex[cont].codigo;
+			indexAtualizado[cont].codigo = vetIndex[i].codigo;
 			indexAtualizado[cont].endereco = cont;	
 			
 			cont++;
 		}
 	}
-	vetClientes = cliAtualizado;
-	vetIndex = indexAtualizado;
 	qtdRegistros = cont;
+	for(int i = 0; i < qtdRegistros; i++){
+		vetClientes[i].codigo = cliAtualizado[i].codigo;
+		vetClientes[i].nome = cliAtualizado[i].nome;
+		vetClientes[i].endereco = cliAtualizado[i].endereco;
+		vetClientes[i].status = cliAtualizado[i].status;
+		
+		vetIndex[i].codigo = indexAtualizado[i].codigo;
+		vetIndex[i].endereco = indexAtualizado[i].endereco;
+		
+	}
+	
 }
 
 
@@ -162,28 +171,22 @@ int main(){
 	mostrarIndex(indexCodClientes, qtdRegistros);*/
 	
 	exclusaoClientes(indexCodClientes, clientes, qtdRegistros);
+	exclusaoClientes(indexCodClientes, clientes, qtdRegistros);
+	
+	cout << "\n\n";
+	
+	//exclusaoClientes(indexCodClientes, clientes, qtdRegistros);
 	
 	cout << "\n---------------CLIENTES ATIVOS-----------------" << endl;
 	mostrarClientesAtivos(indexCodClientes, clientes, qtdRegistros);
 	reorganizacaoCliente(indexCodClientes, clientes, qtdRegistros, cliAtualizado, indexAtualizado);
 
 	cout << "\n---------------VETOR CLIENTES APOS REORGANIZACAO-----------------" << endl;
-	mostrarClientes(cliAtualizado, qtdRegistros);
+	mostrarClientes(clientes, qtdRegistros);
 	cout << "\n---------------VETOR DE INDECE APOS REORGANIZACAO-----------------" << endl;
 	mostrarIndex(indexCodClientes, qtdRegistros);
 	
-	system("cls");
-	
-	exclusaoClientes(indexCodClientes, clientes, qtdRegistros);
-	
-	cout << "\n---------------CLIENTES ATIVOS-----------------" << endl;
-	mostrarClientesAtivos(indexCodClientes, clientes, qtdRegistros);
-	reorganizacaoCliente(indexCodClientes, clientes, qtdRegistros, cliAtualizado, indexAtualizado);
 
-	cout << "\n---------------VETOR CLIENTES APOS REORGANIZACAO-----------------" << endl;
-	mostrarClientes(cliAtualizado, qtdRegistros);
-	cout << "\n---------------VETOR DE INDECE APOS REORGANIZACAO-----------------" << endl;
-	mostrarIndex(indexAtualizado, qtdRegistros);
 	
 
 	
