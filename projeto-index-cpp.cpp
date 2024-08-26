@@ -19,6 +19,115 @@ struct index{
 	int endereco;
 };
 
+void inclusaoClientes(cliente arq[], index idx[], int &qtdRegistros);
+void mostrarClientes(cliente vetorClientes[], int qtdRegistros);
+void mostrarClientesAtivos(index indexClientes[], cliente vetorClientes[], int qtdRegistros);
+void mostrarIndex(index vetIndex[], int qtdRegistros);
+void reorganizacaoCliente(index vetIndex[], cliente vetClientes[], int &qtdRegistros, cliente cliAtualizado[], index indexAtualizado[]);
+
+
+int main(){
+	/*do{
+		
+		
+		
+        switch (opcao) {
+        case 1:
+            int operacaoCidade;
+            system("cls");
+            do {
+
+                cout << "1. Leitura de Cidades" << endl;
+                cout << "2. Mostrar Cidades" << endl;
+                cout << "3. Voltar" << endl;
+                cout << "\nEscolha uma operacao: ";
+                cin >> operacaoCidade;
+
+                switch (operacaoCidade) {
+                case 1:
+                    leituraCidade(cidades, qtdRegistrosCidade);
+
+                    system("cls");
+
+                    break;
+                case 2:
+                	mostrarCidades(cidades, qtdRegistrosCidade);
+                	
+                	cout << "Precione enter para continuar";
+                	getch();
+                	system("cls");
+                    break;
+                case 3:
+                	break;
+                default:
+                	system("cls");
+                    cout << "Opcao invalida, tente novamente.\n" << endl;
+                    
+                    break;
+                }
+            } while (operacaoCidade != 3);
+            break;
+        case 2:
+        	break;
+        default:
+            system("cls");
+            cout << "Opcao invalida, tente novamente.\n" << endl;
+                    
+            break;
+    	}
+    */
+	
+	
+	
+	
+	
+	
+	int qtdRegistros = 5;
+	
+	cliente clientes[T] = {
+	{1, "Joao", "J", 0},
+	{2, "Maria", "M", 0},
+	{7, "Jose", "J", 0},
+	{3, "Pedro", "p", 0},
+	{5, "Fernanda", "F", 0},
+	};
+	 
+	index indexCodClientes[T] = {
+	{1,0},
+	{2,1},
+	{3,3},
+	{5,4},
+	{7,2},
+	};
+	
+	cliente cliAtualizado[T];
+	index indexAtualizado[T];
+	mostrarIndex(indexCodClientes, qtdRegistros);
+	
+	inclusaoClientes(clientes, indexCodClientes, qtdRegistros);
+	system("cls");
+	
+	mostrarClientes(clientes, qtdRegistros);
+	mostrarIndex(indexCodClientes, qtdRegistros);
+	
+	exclusaoClientes(indexCodClientes, clientes, qtdRegistros);
+	exclusaoClientes(indexCodClientes, clientes, qtdRegistros);
+	
+	cout << "\n\n";
+	
+	//exclusaoClientes(indexCodClientes, clientes, qtdRegistros);
+	
+	cout << "\n---------------CLIENTES ATIVOS-----------------" << endl;
+	mostrarClientesAtivos(indexCodClientes, clientes, qtdRegistros);
+	reorganizacaoCliente(indexCodClientes, clientes, qtdRegistros, cliAtualizado, indexAtualizado);
+
+	cout << "\n---------------VETOR CLIENTES APOS REORGANIZACAO-----------------" << endl;
+	mostrarClientes(clientes, qtdRegistros);
+	cout << "\n---------------VETOR DE INDECE APOS REORGANIZACAO-----------------" << endl;
+	mostrarIndex(indexCodClientes, qtdRegistros);
+	
+}
+
 void inclusaoClientes(cliente arq[], index idx[], int &qtdRegistros){
 	int codigo, i;
 	string nome, endereco;
@@ -115,7 +224,7 @@ void reorganizacaoCliente(index vetIndex[], cliente vetClientes[], int &qtdRegis
 	for(int i = 0; i < qtdRegistros; i++){
 		if(vetClientes[vetIndex[i].endereco].status == 0){
 			
-			cliAtualizado[cont].codigo = vetClientes[vetIndex[i].endereco].codigo;
+			cliAtualizado[cont].codigo = vetIndex[i].codigo;
 			cliAtualizado[cont].nome = vetClientes[vetIndex[i].endereco].nome;
 			cliAtualizado[cont].endereco = vetClientes[vetIndex[i].endereco].endereco;
 			cliAtualizado[cont].status = vetClientes[vetIndex[i].endereco].status;	
@@ -139,58 +248,3 @@ void reorganizacaoCliente(index vetIndex[], cliente vetClientes[], int &qtdRegis
 	}
 	
 }
-
-
-int main(){
-	int qtdRegistros = 5;
-	
-	cliente clientes[T] = {
-	{1, "Joao", "J", 0},
-	{2, "Maria", "M", 0},
-	{7, "Jose", "J", 0},
-	{3, "Pedro", "p", 0},
-	{5, "Fernanda", "F", 0},
-	};
-	 
-	index indexCodClientes[T] = {
-	{1,0},
-	{2,1},
-	{3,3},
-	{5,4},
-	{7,2},
-	};
-	
-	cliente cliAtualizado[T];
-	index indexAtualizado[T];
-	/*mostrarIndex(indexCodClientes, qtdRegistros);
-	
-	inclusaoClientes(clientes, indexCodClientes, qtdRegistros);
-	system("cls");
-	
-	mostrarClientes(clientes, qtdRegistros);
-	mostrarIndex(indexCodClientes, qtdRegistros);*/
-	
-	exclusaoClientes(indexCodClientes, clientes, qtdRegistros);
-	exclusaoClientes(indexCodClientes, clientes, qtdRegistros);
-	
-	cout << "\n\n";
-	
-	//exclusaoClientes(indexCodClientes, clientes, qtdRegistros);
-	
-	cout << "\n---------------CLIENTES ATIVOS-----------------" << endl;
-	mostrarClientesAtivos(indexCodClientes, clientes, qtdRegistros);
-	reorganizacaoCliente(indexCodClientes, clientes, qtdRegistros, cliAtualizado, indexAtualizado);
-
-	cout << "\n---------------VETOR CLIENTES APOS REORGANIZACAO-----------------" << endl;
-	mostrarClientes(clientes, qtdRegistros);
-	cout << "\n---------------VETOR DE INDECE APOS REORGANIZACAO-----------------" << endl;
-	mostrarIndex(indexCodClientes, qtdRegistros);
-	
-
-	
-
-	
-	
-	
-}
-
