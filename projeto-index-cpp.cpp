@@ -483,7 +483,7 @@ IndexConsulta indexConsultas[T] = {
     return 0;
 }
 
-// Implementar funções de inclusão
+// Implementar funï¿½ï¿½es de inclusï¿½o
 void inclusaoCidade(Cidade arq[], IndexCidade idx[], int &qtdRegistros) {
     // Implementar funcao de inclusao para Cidade
 }
