@@ -12,19 +12,9 @@ struct Cidade {
     string UF;
 };
 
-struct IndexCidade {
-    int codigo_cidade;
-    int endereco;
-};
-
 struct EspecialidadeMedica {
     int codigo_especialidade;
     string descricao;
-};
-
-struct IndexEspecialidadeMedica {
-    int codigo_especialidade;
-    int endereco;
 };
 
 struct Medico {
@@ -34,11 +24,7 @@ struct Medico {
     string endereco;
     string telefone;
     int codigo_cidade;
-};
-
-struct IndexMedico {
-    int codigo_medico;
-    int endereco;
+    int status;
 };
 
 struct Paciente {
@@ -46,21 +32,12 @@ struct Paciente {
     string nome;
     string endereco;
     int codigo_cidade;
-};
-
-struct IndexPaciente {
-    int codigo_paciente;
-    int endereco;
+    int status;
 };
 
 struct CID {
     int codigo_CID;
     string descricao;
-};
-
-struct IndexCID {
-    int codigo_CID;
-    int endereco;
 };
 
 struct Medicamento {
@@ -70,11 +47,6 @@ struct Medicamento {
     int estoque_minimo;
     int estoque_maximo;
     float preco_unitario;
-};
-
-struct IndexMedicamento {
-    int codigo_medicamento;
-    int endereco;
 };
 
 struct Consulta {
@@ -88,39 +60,43 @@ struct Consulta {
     int qtde_medicamento;
 };
 
-struct IndexConsulta {
-    int codigo_consulta;
+struct Index {
+    int codigo;
     int endereco;
 };
 
 // Funcoes
 // Cidades
-void inclusaoCidade(Cidade arq[], IndexCidade idx[], int &qtdRegistros);
+void inclusaoCidade(Cidade arq[], Index idx[], int &qtdRegistros);
 void mostrarCidade(Cidade vetorCidades[], int qtdRegistros);
 
 // Especialidade Medica
-void inclusaoEspecialidadeMedica(EspecialidadeMedica arq[], IndexEspecialidadeMedica idx[], int &qtdRegistros);
+void inclusaoEspecialidadeMedica(EspecialidadeMedica arq[], Index idx[], int &qtdRegistros);
 void mostrarEspecialidadeMedica(EspecialidadeMedica vetorEspecialidades[], int qtdRegistros);
 
 // Inclusao Medico
-void inclusaoMedico(Medico arq[], IndexMedico idx[], int &qtdRegistros);
-void mostrarMedico(Medico vetorMedicos[], int qtdRegistros);
+void inclusaoMedico(struct Medico medicos[],struct EspecialidadeMedica esp[],struct Cidade cidades[],struct Index ind[],struct Index ind_esp[],struct Index ind_cidade[],int &cont,int cont_esp,int cont_cidade);
+void mostrarMedico(struct Medico medico[],struct Index ind[],int cont);
+void exclusaoMedico(struct Medico medicos[],struct Index ind[],int cont,struct Index ind_consulta[],int cont_consulta);
 
 // Paciente
-void inclusaoPaciente(Paciente arq[], IndexPaciente idx[], int &qtdRegistros);
-void mostrarPaciente(Paciente vetorPacientes[], int qtdRegistros);
+void inclusaoPaciente(struct Paciente pacientes[],struct Index ind[],struct Cidade cidade[],struct Index ind_cidade[],int &cont,int cont_cidade);
+void mostrarPaciente(struct Paciente paciente[],struct Index ind[],int cont);
+void exclusaoPaciente(struct Paciente pacientes[],struct Index ind[],int cont,struct Index ind_consulta[],int cont_consulta);
 
 // CID
-void inclusaoCID(CID arq[], IndexCID idx[], int &qtdRegistros);
+void inclusaoCID(CID arq[], Index idx[], int &qtdRegistros);
 void mostrarCID(CID vetorCIDs[], int qtdRegistros);
 
 // Medicamento
-void inclusaoMedicamento(Medicamento arq[], IndexMedicamento idx[], int &qtdRegistros);
+void inclusaoMedicamento(Medicamento arq[], Index idx[], int &qtdRegistros);
 void mostrarMedicamento(Medicamento vetorMedicamentos[], int qtdRegistros);
 
 // Consulta
-void inclusaoConsulta(Consulta arq[], IndexConsulta idx[], int &qtdRegistros);
+void inclusaoConsulta(Consulta arq[], Index idx[], int &qtdRegistros);
 void mostrarConsulta(Consulta vetorConsultas[], int qtdRegistros);
+
+int busca (struct Index idx[], int cont, int cod);
 
 int main() {
 	
@@ -133,7 +109,7 @@ Cidade cidades[T] = {
     {5, "Fortaleza", "CE"}
 };
 
-IndexCidade indexCidades[T] = {
+Index indexCidades[T] = {
     {1, 0},
     {2, 1},
     {3, 2},
@@ -150,7 +126,7 @@ EspecialidadeMedica especialidades[T] = {
     {5, "Dermatologia"}
 };
 
-IndexEspecialidadeMedica indexEspecialidades[T] = {
+Index indexEspecialidades[T] = {
     {1, 0},
     {2, 1},
     {3, 2},
@@ -167,7 +143,7 @@ Medico medicos[T] = {
     {5, "Dr. Carlos Almeida", 5, "Rua de Caxias, 700", "(85) 5678-9012", 5}
 };
 
-IndexMedico indexMedicos[T] = {
+Index indexMedicos[T] = {
     {1, 0},
     {2, 1},
     {3, 2},
@@ -177,14 +153,14 @@ IndexMedico indexMedicos[T] = {
 
 int qtdRegistrosPaciente = 5;
 Paciente pacientes[T] = {
-    {1, "Jose da Silva", "Rua do Comercio, 10", 1},
-    {2, "Ana Maria", "Rua das Flores, 20", 2},
-    {3, "Carlos Eduardo", "Av. Brasil, 30", 3},
-    {4, "Patricia Souza", "Rua da Paz, 40", 4},
-    {5, "Marcelo Ferreira", "Rua das Acacias, 50", 5}
+    {1, "Jose da Silva", "Rua do Comercio, 10", 1, 0},
+    {2, "Ana Maria", "Rua das Flores, 20", 2, 0},
+    {3, "Carlos Eduardo", "Av. Brasil, 30", 3, 0},
+    {4, "Patricia Souza", "Rua da Paz, 40", 4, 0},
+    {5, "Marcelo Ferreira", "Rua das Acacias, 50", 5, 0}
 };
 
-IndexPaciente indexPacientes[T] = {
+Index indexPacientes[T] = {
     {1, 0},
     {2, 1},
     {3, 2},
@@ -201,7 +177,7 @@ CID cids[T] = {
     {5, "E11 - Diabetes Tipo 2"}
 };
 
-IndexCID indexCIDs[T] = {
+Index indexCIDs[T] = {
     {1, 0},
     {2, 1},
     {3, 2},
@@ -218,7 +194,7 @@ Medicamento medicamentos[T] = {
     {5, "Dipirona", 300, 50, 350, 5.25}
 };
 
-IndexMedicamento indexMedicamentos[T] = {
+Index indexMedicamentos[T] = {
     {1, 0},
     {2, 1},
     {3, 2},
@@ -235,7 +211,7 @@ Consulta consultas[T] = {
     {5, 5, 5, "2024-01-30", "14:00", 5, 5, 3}
 };
 
-IndexConsulta indexConsultas[T] = {
+Index indexConsultas[T] = {
     {1, 0},
     {2, 1},
     {3, 2},
@@ -325,18 +301,23 @@ IndexConsulta indexConsultas[T] = {
                     system("cls");
                     cout << "=== MEDICOS ===" << endl;
                     cout << "1. Incluir Medico" << endl;
-                    cout << "2. Mostrar Medicos" << endl;
+                    cout << "2. Excluir Medico" << endl;
+                    cout << "3. Mostrar Medicos" << endl;
                     cout << "0. Voltar" << endl;
                     cout << "Escolha uma opcao: ";
                     cin >> escolhaOperacao;
                     
                     switch (escolhaOperacao) {
                         case 1:
-                            inclusaoMedico(medicos, indexMedicos, qtdRegistrosMedico);
+                            inclusaoMedico(medicos, especialidades, cidades, indexMedicos, indexEspecialidades, indexCidades, qtdRegistrosMedico, qtdRegistrosEspecialidade, qtdRegistrosCidade);
                             getch();
                             break;
                         case 2:
-                            mostrarMedico(medicos, qtdRegistrosMedico);
+                            exclusaoMedico(medicos, indexMedicos, qtdRegistrosMedico, indexConsultas, qtdRegistrosConsulta);
+                            getch();
+                            break;
+                        case 3:
+                            mostrarMedico(medicos, indexMedicos, qtdRegistrosMedico);
                             getch();
                             break;
                         case 0:
@@ -355,18 +336,23 @@ IndexConsulta indexConsultas[T] = {
                     system("cls");
                     cout << "=== PACIENTES ===" << endl;
                     cout << "1. Incluir Paciente" << endl;
-                    cout << "2. Mostrar Pacientes" << endl;
+                    cout << "2. Excluir Paciente" << endl;
+                    cout << "3. Mostrar Pacientes" << endl;        
                     cout << "0. Voltar" << endl;
                     cout << "Escolha uma opcao: ";
                     cin >> escolhaOperacao;
                     
                     switch (escolhaOperacao) {
                         case 1:
-                            inclusaoPaciente(pacientes, indexPacientes, qtdRegistrosPaciente);
+                            inclusaoPaciente(pacientes, indexPacientes, cidades, indexCidades, qtdRegistrosPaciente, qtdRegistrosCidade);
                             getch();
                             break;
                         case 2:
-                            mostrarPaciente(pacientes, qtdRegistrosPaciente);
+                            exclusaoPaciente(pacientes, indexPacientes, qtdRegistrosPaciente, indexConsultas, qtdRegistrosConsulta);
+                            getch();
+                            break;
+                        case 3:
+                            mostrarPaciente(pacientes, indexPacientes, qtdRegistrosPaciente);
                             getch();
                             break;
                         case 0:
@@ -483,11 +469,6 @@ IndexConsulta indexConsultas[T] = {
     return 0;
 }
 
-// Implementar fun��es de inclus�o
-void inclusaoCidade(Cidade arq[], IndexCidade idx[], int &qtdRegistros) {
-    // Implementar funcao de inclusao para Cidade
-}
-
 void mostrarCidade(Cidade vetorCidades[], int qtdRegistros) {
     cout << "=== CIDADES ===" << endl;
     for (int i = 0; i < qtdRegistros; i++) {
@@ -499,7 +480,7 @@ void mostrarCidade(Cidade vetorCidades[], int qtdRegistros) {
     }
 }
 
-void inclusaoEspecialidadeMedica(EspecialidadeMedica arq[], IndexEspecialidadeMedica idx[], int &qtdRegistros) {
+void inclusaoEspecialidadeMedica(EspecialidadeMedica arq[], Index idx[], int &qtdRegistros) {
     // Implementar funcao de inclusao para Especialidade Medica
 }
 
@@ -513,64 +494,192 @@ void mostrarEspecialidadeMedica(EspecialidadeMedica vetorEspecialidades[], int q
     }
 }
 
-void inclusaoMedico(Medico arq[], IndexMedico idx[], int &qtdRegistros) {
-//    for(int i = 0; i<T; i++ )
-//	int codigo, i;
-//	string nome, endereco;
-//	cout << "Digite o codigo do registro: ";
-//	cin >> codigo;
-//	cout << "\nDigite o nome do cliente: ";
-//	cin >> nome;
-//	cout << "\nDigite o endereco do cliente: ";
-//	cin >> endereco;
-//	
-//	arq[qtdRegistros].codigo = codigo;
-//	arq[qtdRegistros].nome = nome;
-//	arq[qtdRegistros].endereco = endereco;
-//	arq[qtdRegistros].status = 0;
-//
-//	
-//	for(i = qtdRegistros-1; i <= 0 && idx[i].codigo > codigo; i--){
-//		idx[i+1].codigo = idx[i].codigo;
-//		idx[i+1].endereco = idx[i].endereco;
-//	}
-//	
-//	idx[i+1].codigo = codigo;
-//	idx[i+1].endereco = qtdRegistros;
-//	qtdRegistros++;
+void inclusaoMedico(struct Medico medicos[],struct EspecialidadeMedica esp[],struct Cidade cidades[],struct Index ind[],struct Index ind_esp[],struct Index ind_cidade[],int &cont,int cont_esp,int cont_cidade){
+	int cod=0;
+		
+	for(int x=1;x != -1;){
+		cout<<" Incluir um novo Medico "<< endl;
+		cout<<" Cod: ";
+		cin>>medicos[cont].codigo_medico;
+		cin.ignore();
+		if(busca(ind,cont,medicos[cont].codigo_medico) == -1){
+			cod=medicos[cont].codigo_medico;
+			cout<<" Nome: ";
+			getline(cin,medicos[cont].nome);
+			cout<<" Codigo da Especialidade: ";
+			cin>> medicos[cont].codigo_especialidade;
+			cin.ignore();
+			int result = busca(ind_esp,cont_esp,medicos[cont].codigo_especialidade);
+			cout<<" Descricao: "<< esp[result].descricao <<endl;
+			cout <<" Endereco : ";
+			getline(cin,medicos[cont].endereco);
+			cout<<" Codigo da Cidade: ";
+			cin>>medicos[cont].codigo_cidade;
+			cin.ignore();
+			result = busca(ind_cidade,cont_cidade,medicos[cont].codigo_cidade);
+			cout<<" Cidade: " << cidades[result].nome << " | " << cidades[result].UF <<endl;
+			cout<<" Telefone: ";
+			getline(cin,medicos[cont].telefone);
+			cout<<"\n### Medico Cadastrado com sucesso### "<<endl;
+			medicos[cont].status = 0;
+			x= -1;  	
+		}
+		else{
+			cout<<"\n ### Codigo ja existente ### \n" <<endl;
+		}
+	}
+	
+	int i=0;
+	for(i=cont-1; i>= 0 && ind[i].codigo > cod ;i--){
+		ind[i+1].codigo = ind[i].codigo;
+		ind[i+1].endereco = ind[i].endereco;
+		
+	}
+	
+	ind[i+1].codigo = cod;
+	ind[i+1].endereco = cont;
+	cont++;
 }
 
-void mostrarMedico(Medico vetorMedicos[], int qtdRegistros) {
-    cout << "=== MEDICOS ===" << endl;
-    for (int i = 0; i < qtdRegistros; i++) {
-        cout << "**Registro " << i + 1 << "**" << endl;
-        cout << "Codigo do Medico: " << vetorMedicos[i].codigo_medico << endl;
-        cout << "Nome: " << vetorMedicos[i].nome << endl;
-        cout << "Codigo da Especialidade: " << vetorMedicos[i].codigo_especialidade << endl;
-        cout << "Endereco: " << vetorMedicos[i].endereco << endl;
-        cout << "Telefone: " << vetorMedicos[i].telefone << endl;
-        cout << "Codigo da Cidade: " << vetorMedicos[i].codigo_cidade << endl;
-        cout << endl;
-    }
+void exclusaoMedico(struct Medico medicos[],struct Index ind[],int cont,struct Index ind_consulta[],int cont_consulta){
+	int ex;
+	for(int x=1;x != -1;){
+		cout<<" Digite o codigo da exclusao do Medico: ";
+		cin>>ex;
+		if(ex == 0){
+			x=-1;
+		}
+		else{
+			int result = busca(ind,cont,ex);
+			if(result != -1){
+				if(busca(ind_consulta,cont_consulta,medicos[result].codigo_medico) == -1){
+					if(medicos[result].status != 1){
+						cout << "\n Codigo do Medico: " << medicos[result].codigo_medico; 
+					    cout << "\n Nome: " << medicos[result].nome;
+					    medicos[result].status = 1;
+					    cout<<"\n\n ### Medico Excluido com Sucesso ### \n" <<endl;
+					    x=-1;
+					}
+					else{
+						cout<<"\n ### Medico ja Excluido ### \n" <<endl;
+					}
+				}	
+				else{
+					cout<<"\n ### Nao foi possivel concluir a operacao ### " <<endl;
+					cout<<"\n Medico esta cadastrado em uma consulta \n" <<endl;
+				}
+			}
+			else{
+				cout<<"\n ### Codigo nao existente ### \n" <<endl;
+			}
+		}	
+	}	
 }
 
-void inclusaoPaciente(Paciente arq[], IndexPaciente idx[], int &qtdRegistros) {
-    // Implementar funcao de inclusao para Paciente
+void mostrarMedico(struct Medico medico[],struct Index ind[],int cont){
+	cout << "=== MEDICOS ===" << endl;
+	for(int i=0;i<cont;i++){
+		int k= ind[i].endereco;
+		if(medico[k].status ==0 ){
+            cout << "\n\n\n**Registro " << k + 1 << "**";
+			cout << "\nCodigo do Medico: " << medico[k].codigo_medico;
+	        cout << "\nNome: " << medico[k].nome;
+	        cout << "\nEspecialidade: " << medico[k].codigo_especialidade;
+			cout << "\nEndereco: " << medico[k].endereco;
+			cout << "\nTelefone: " << medico[k].telefone;
+	        cout << "\nCidade: " << medico[k].codigo_cidade << endl;
+        }
+	}
 }
 
-void mostrarPaciente(Paciente vetorPacientes[], int qtdRegistros) {
-    cout << "=== PACIENTES ===" << endl;
-    for (int i = 0; i < qtdRegistros; i++) {
-        cout << "**Registro " << i + 1 << "**" << endl;
-        cout << "Codigo do Paciente: " << vetorPacientes[i].codigo_paciente << endl;
-        cout << "Nome: " << vetorPacientes[i].nome << endl;
-        cout << "Endereco: " << vetorPacientes[i].endereco << endl;
-        cout << "Codigo da Cidade: " << vetorPacientes[i].codigo_cidade << endl;
-        cout << endl;
-    }
+void inclusaoPaciente(struct Paciente pacientes[],struct Index ind[],struct Cidade cidade[],struct Index ind_cidade[],int &cont,int cont_cidade){
+	int cod=0;	
+	for(int x=1;x != -1;){
+		cout<<" Incluir um novo Paciente "<< endl;
+		cout<<" Cod: ";
+		cin>>pacientes[cont].codigo_paciente;
+		cin.ignore();
+		if(busca(ind,cont,pacientes[cont].codigo_paciente) == -1){
+			cod=pacientes[cont].codigo_paciente;
+			cout<<" Nome: ";
+			getline(cin,pacientes[cont].nome);
+			cout <<" Endereco : ";
+			getline(cin,pacientes[cont].endereco);
+			cout<<" Codigo da Cidade: ";
+			cin>>pacientes[cont].codigo_cidade;
+			cin.ignore();
+			int result = busca(ind_cidade,cont_cidade,pacientes[cont].codigo_cidade);
+			cout<<" Cidade: " << cidade[result].nome<< " | " << cidade[result].UF <<endl;
+			pacientes[cont].status =0;
+			cout<<"\n### Paciente Cadastrado com sucesso ###"<<endl;
+			x= -1;  	
+		}
+		else{
+			cout<<"\n ### Codigo ja existente ### \n" <<endl;
+		}
+	}
+	
+	int i=0;
+	for(i=cont-1; i>= 0 && ind[i].codigo > cod ;i--){
+		ind[i+1].codigo = ind[i].codigo;
+		ind[i+1].endereco = ind[i].endereco;
+	}
+	
+	ind[i+1].codigo = cod;
+	ind[i+1].endereco = cont;
+	cont++;
 }
 
-void inclusaoCID(CID arq[], IndexCID idx[], int &qtdRegistros) {
+void mostrarPaciente(struct Paciente paciente[],struct Index ind[],int cont){
+	cout << "=== PACIENTES ===" << endl;
+	for(int i=0;i<cont;i++){
+		int k= ind[i].endereco;
+		if(paciente[k].status ==0 ){
+            cout << "\n\n\n**Registro " << k + 1 << "**";
+			cout << "\nCodigo do Paciente: " << paciente[k].codigo_paciente;
+	        cout << "\nNome: " << paciente[k].nome;
+			cout << "\nEndereco: " << paciente[k].endereco;
+	        cout << "\nCidade: " << paciente[k].codigo_cidade << endl;
+        }
+	}
+}
+
+void exclusaoPaciente(struct Paciente pacientes[],struct Index ind[],int cont,struct Index ind_consulta[],int cont_consulta){
+	int ex;
+	for(int x=1;x != -1;){
+		cout<<" Digite o codigo da exclusao do Paciente: ";
+		cin>>ex;
+		if(ex ==0 ){
+			x=-1;
+		}
+		else{
+			int result = busca(ind,cont,ex);
+			if(result != -1){
+				if(busca(ind_consulta,cont_consulta,pacientes[result].codigo_paciente) == -1){
+					if(pacientes[result].status != 1){
+						cout << "\n Paciente: " << pacientes[result].codigo_paciente << " -- " << pacientes[result].nome<<endl;
+					    pacientes[result].status = 1;
+					    cout<<"\n\n ### Paciente Ecluido com Sucesso ### \n" <<endl;
+					    x=-1;
+					}
+					else{
+						cout<<"\n ### Paciente ja Excluido ### \n" <<endl;
+					}
+				}	
+				else{
+					cout<<"\n ### Nao foi possivel concluir a operacao ### " <<endl;
+					cout<<"\n Paciente esta cadastrado em uma consulta \n" <<endl;
+				}
+			}
+			else{
+				cout<<"\n ### Codigo nao existente ### \n" <<endl;
+			}
+		}
+
+	}	
+}
+
+void inclusaoCID(CID arq[], Index idx[], int &qtdRegistros) {
     // Implementar funcao de inclusao para CID
 }
 
@@ -584,8 +693,32 @@ void mostrarCID(CID vetorCIDs[], int qtdRegistros) {
     }
 }
 
-void inclusaoMedicamento(Medicamento arq[], IndexMedicamento idx[], int &qtdRegistros) {
-    // Implementar funcao de inclusao para Medicamento
+void leituraMedicamento(struct Medicamento medicamento[],int &cont){
+
+	int i = 0;    
+	for (int saida = 1; i < T && saida != 0; i++){
+		cout<<"\n**Registro [ "<<i + 1<<" ]**"<<endl;
+		cout << " Codigo do Medicamento: ";
+        cin >> medicamento[i].codigo_medicamento;
+        cin.ignore();
+		if (medicamento[i].codigo_medicamento > 0){
+			cout << " Descricao do Medicamento: ";
+            getline(cin,medicamento[i].descricao);
+            cout << " Quantidade em Estoque: ";
+            cin >> medicamento[i].quant_estoque;
+            cin.ignore();
+            cout << " Quantidade Minima de Estoque: ";
+            cin >> medicamento[i].estoque_minimo;
+            cin.ignore();
+            cout << " Quantidade Maxima de Estoque: ";
+            cin >> medicamento[i].estoque_maximo;
+            cout << " Preco Unitario do Medicamento: ";
+            cin >> medicamento[i].preco_unitario;
+            cin.ignore();
+        }
+        else saida = 0;
+    }
+    cont = i-1;
 }
 
 void mostrarMedicamento(Medicamento vetorMedicamentos[], int qtdRegistros) {
@@ -602,7 +735,7 @@ void mostrarMedicamento(Medicamento vetorMedicamentos[], int qtdRegistros) {
     }
 }
 
-void inclusaoConsulta(Consulta arq[], IndexConsulta idx[], int &qtdRegistros) {
+void inclusaoConsulta(Consulta arq[], Index idx[], int &qtdRegistros) {
     // Implementar funcao de inclusao para Consulta
 }
 
@@ -622,5 +755,20 @@ void mostrarConsulta(Consulta vetorConsultas[], int qtdRegistros) {
     }
 }
 
-
-
+int busca (struct Index idx[], int cont, int cod){
+    int i = 0, f = cont-1;
+    int m = (i + f) / 2;
+    if(f == -1){
+    	return -1;
+	}
+    for (; f >= i && cod != idx[m].codigo; m = (i + f) / 2){
+        if (cod > idx[m].codigo)
+            i = m + 1;
+        else
+            f = m - 1;
+    }
+    if (cod == idx[m].codigo){
+    	return idx[m].endereco;
+    }
+    else return -1;
+}
