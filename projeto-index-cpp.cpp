@@ -58,6 +58,7 @@ struct Consulta {
     int cod_CID;
     int cod_medicamento;
     int qtde_medicamento;
+    int status;
 };
 
 struct Index {
@@ -89,12 +90,15 @@ void inclusaoCID(CID arq[], Index idx[], int &qtdRegistros);
 void mostrarCID(CID vetorCIDs[], int qtdRegistros);
 
 // Medicamento
-void inclusaoMedicamento(Medicamento arq[], Index idx[], int &qtdRegistros);
-void mostrarMedicamento(Medicamento vetorMedicamentos[], int qtdRegistros);
+void leituraMedicamento(struct Medicamento medicamento[],int &cont);
+void mostrarMedicamento(struct Medicamento medicamentos[],struct Index ind[],int cont);
+void estoqueMinimo(struct Medicamento medicamentos[],int cont);
 
 // Consulta
-void inclusaoConsulta(Consulta arq[], Index idx[], int &qtdRegistros);
-void mostrarConsulta(Consulta vetorConsultas[], int qtdRegistros);
+void agendarConsulta(struct Consulta consultas[],struct Index ind[],int &cont,struct Paciente pacientes[],struct Index ind_paciente[],struct Index ind_pacientesConsulta[],int cont_paciente,struct Medico medicos[],struct Index ind_medico[],int cont_medico,struct Index ind_medConsulta[],struct Cidade cidade[],struct Index ind_cidade[],int cont_cidade,struct CID cid[],struct Index ind_cid[],int cont_cid,struct Medicamento medicamentos[],struct Index ind_medicamento[],int cont_medicamento,struct EspecialidadeMedica esp[],struct Index ind_esp[],int cont_esp);
+void mostrarConsulta(struct Consulta consultas[],struct Index ind[],int cont);
+void valorTotal(struct Consulta consultas[],int cont,struct Medicamento medicamento[],struct Index ind_medicamento[],int cont_medicamento);
+void reorganizacaoPaciente (struct Index idx[], struct Paciente pacientes[], int &cont);
 
 int busca (struct Index idx[], int cont, int cod);
 
@@ -219,6 +223,22 @@ Index indexConsultas[T] = {
     {5, 4}
 };
 
+Index indexPacientesConsultas[T] = {
+    {1, 0},
+    {2, 1},
+    {3, 2},
+    {4, 3},
+    {5, 4}
+};
+
+Index indexMedicosConsultas[T] = {
+    {1, 0},
+    {2, 1},
+    {3, 2},
+    {4, 3},
+    {5, 4}
+};
+
     int escolhaTabela, escolhaOperacao;
 
     do {
@@ -240,18 +260,13 @@ Index indexConsultas[T] = {
                 do {
                     system("cls");
                     cout << "=== CIDADES ===" << endl;
-                    cout << "1. Incluir Cidade" << endl;
-                    cout << "2. Mostrar Cidades" << endl;
+                    cout << "1. Mostrar Cidades" << endl;
                     cout << "0. Voltar" << endl;
                     cout << "Escolha uma opcao: ";
                     cin >> escolhaOperacao;
                     
                     switch (escolhaOperacao) {
                         case 1:
-                            inclusaoCidade(cidades, indexCidades, qtdRegistrosCidade);
-                            getch();
-                            break;
-                        case 2:
                             mostrarCidade(cidades, qtdRegistrosCidade);
                             getch();
                             break;
@@ -337,7 +352,8 @@ Index indexConsultas[T] = {
                     cout << "=== PACIENTES ===" << endl;
                     cout << "1. Incluir Paciente" << endl;
                     cout << "2. Excluir Paciente" << endl;
-                    cout << "3. Mostrar Pacientes" << endl;        
+                    cout << "3. Mostrar Pacientes" << endl;
+                    cout << "4. Reorganizacao" << endl;         
                     cout << "0. Voltar" << endl;
                     cout << "Escolha uma opcao: ";
                     cin >> escolhaOperacao;
@@ -353,6 +369,10 @@ Index indexConsultas[T] = {
                             break;
                         case 3:
                             mostrarPaciente(pacientes, indexPacientes, qtdRegistrosPaciente);
+                            getch();
+                            break;
+                        case 4:
+                            reorganizacaoPaciente(indexPacientes, pacientes, qtdRegistrosPaciente);
                             getch();
                             break;
                         case 0:
@@ -402,19 +422,23 @@ Index indexConsultas[T] = {
                     cout << "=== MEDICAMENTOS ===" << endl;
                     cout << "1. Incluir Medicamento" << endl;
                     cout << "2. Mostrar Medicamentos" << endl;
+                    cout << "3. Estoque" << endl;                    
                     cout << "0. Voltar" << endl;
                     cout << "Escolha uma opcao: ";
                     cin >> escolhaOperacao;
                     
                     switch (escolhaOperacao) {
                         case 1:
-                            inclusaoMedicamento(medicamentos, indexMedicamentos, qtdRegistrosMedicamento);
+                            leituraMedicamento(medicamentos, qtdRegistrosMedicamento);
                             getch();
                             break;
                         case 2:
-                            mostrarMedicamento(medicamentos, qtdRegistrosMedicamento);
+                            mostrarMedicamento(medicamentos, indexMedicamentos, qtdRegistrosMedicamento);
                             getch();
                             break;
+                        case 3:
+                            estoqueMinimo(medicamentos, qtdRegistrosMedicamento);
+                            getch();
                         case 0:
                             system("cls");
                             break;
@@ -430,19 +454,24 @@ Index indexConsultas[T] = {
                 do {
                     system("cls");
                     cout << "=== CONSULTAS ===" << endl;
-                    cout << "1. Incluir Consulta" << endl;
+                    cout << "1. Agendar Consulta" << endl;
                     cout << "2. Mostrar Consultas" << endl;
+                    cout << "3. Valor Total" << endl;                    
                     cout << "0. Voltar" << endl;
                     cout << "Escolha uma opcao: ";
                     cin >> escolhaOperacao;
                     
                     switch (escolhaOperacao) {
                         case 1:
-                            inclusaoConsulta(consultas, indexConsultas, qtdRegistrosConsulta);
+                            agendarConsulta(consultas, indexConsultas, qtdRegistrosConsulta, pacientes, indexPacientes, indexPacientesConsultas, qtdRegistrosPaciente, medicos, indexMedicamentos, qtdRegistrosMedico, indexMedicosConsultas, cidades, indexCidades, qtdRegistrosCidade, cids, indexCIDs, qtdRegistrosCID, medicamentos, indexMedicamentos, qtdRegistrosMedicamento, especialidades, indexEspecialidades, qtdRegistrosEspecialidade);
                             getch();
                             break;
                         case 2:
-                            mostrarConsulta(consultas, qtdRegistrosConsulta);
+                            mostrarConsulta(consultas, indexConsultas, qtdRegistrosConsulta);
+                            getch();
+                            break;
+                        case 3:
+                            valorTotal(consultas, qtdRegistrosConsulta, medicamentos, indexMedicamentos, qtdRegistrosMedicamento);
                             getch();
                             break;
                         case 0:
@@ -721,40 +750,158 @@ void leituraMedicamento(struct Medicamento medicamento[],int &cont){
     cont = i-1;
 }
 
-void mostrarMedicamento(Medicamento vetorMedicamentos[], int qtdRegistros) {
-    cout << "=== MEDICAMENTOS ===" << endl;
-    for (int i = 0; i < qtdRegistros; i++) {
-        cout << "**Registro " << i + 1 << "**" << endl;
-        cout << "Codigo do Medicamento: " << vetorMedicamentos[i].codigo_medicamento << endl;
-        cout << "Descricao: " << vetorMedicamentos[i].descricao << endl;
-        cout << "Quantidade em Estoque: " << vetorMedicamentos[i].quant_estoque << endl;
-        cout << "Estoque Minimo: " << vetorMedicamentos[i].estoque_minimo << endl;
-        cout << "Estoque Maximo: " << vetorMedicamentos[i].estoque_maximo << endl;
-        cout << "Preco Unitario: R$ " << vetorMedicamentos[i].preco_unitario << endl;
-        cout << endl;
-    }
+void mostrarMedicamento(struct Medicamento medicamentos[],struct Index ind[],int cont){
+	int med=0;
+	for(int x=1;x != -1;){
+		cout<<" Digite o Codigo do Medicamento: ";
+		cin>>med;
+		if(med == 0){
+			x=-1;
+		}
+		else{
+			if( busca(ind,cont,med) != -1){
+				int i = busca(ind,cont,med);
+				cout << "\n\nCodigo do Medicamento: " << medicamentos[i].codigo_medicamento;
+				cout << "\nDescricao: " << medicamentos[i].descricao;
+				cout << "\nQuantidade em Estoque: " << medicamentos[i].quant_estoque;
+				cout << "\nQuantidade Minima de Estoque: " << medicamentos[i].estoque_minimo;
+				cout << "\nQuantidade Maxima de Estoque: " << medicamentos[i].estoque_maximo;
+				cout << "\nPreco Unitario do Medicamento: " << medicamentos[i].preco_unitario;
+				cout <<"\nValor Total em Estoque: "<< medicamentos[i].quant_estoque * medicamentos[i].preco_unitario << endl;
+				x=-1;
+			}
+			else{
+				cout<<"\n ### Codigo nao existente ### \n" <<endl;
+			}
+		}
+	}	
 }
 
-void inclusaoConsulta(Consulta arq[], Index idx[], int &qtdRegistros) {
-    // Implementar funcao de inclusao para Consulta
+void estoqueMinimo(struct Medicamento medicamentos[],int cont){
+	int compra =0,valor=0;
+	for(int i=0;i<cont;i++){
+		if(medicamentos[i].quant_estoque < medicamentos[i].estoque_minimo){
+			cout << "\n\nCodigo do Medicamento: " << medicamentos[i].codigo_medicamento;
+			cout << "\nDescricao: " << medicamentos[i].descricao;
+			cout << "\nQuantidade em Estoque: " << medicamentos[i].quant_estoque;
+			cout << "\nQuantidade Maxima de Estoque: " << medicamentos[i].estoque_maximo;
+			cout << "\nPreco Unitario do Medicamento: " << medicamentos[i].preco_unitario;
+			compra += medicamentos[i].estoque_maximo-medicamentos[i].quant_estoque;
+			valor += (medicamentos[i].estoque_maximo-medicamentos[i].quant_estoque) * medicamentos[i].preco_unitario;		
+		}
+	}
+	cout<<"\n\n ------------------------------"<<endl;
+	cout<<" Quantidade a ser Comprada: "<< compra <<endl;
+	cout<<"\n ------------------------------"<<endl;
+	cout<<" Valor Total da Compra: "<< valor<<endl;
 }
 
-void mostrarConsulta(Consulta vetorConsultas[], int qtdRegistros) {
-    cout << "=== CONSULTAS ===" << endl;
-    for (int i = 0; i < qtdRegistros; i++) {
-        cout << "**Registro " << i + 1 << "**" << endl;
-        cout << "Codigo da Consulta: " << vetorConsultas[i].codigo_consulta << endl;
-        cout << "Codigo do Paciente: " << vetorConsultas[i].codigo_paciente << endl;
-        cout << "Codigo do Medico: " << vetorConsultas[i].codigo_medico << endl;
-        cout << "Data: " << vetorConsultas[i].data << endl;
-        cout << "Horario: " << vetorConsultas[i].horario << endl;
-        cout << "Codigo CID: " << vetorConsultas[i].cod_CID << endl;
-        cout << "Codigo do Medicamento: " << vetorConsultas[i].cod_medicamento << endl;
-        cout << "Quantidade de Medicamento: " << vetorConsultas[i].qtde_medicamento << endl;
-        cout << endl;
-    }
+void agendarConsulta(struct Consulta consultas[],struct Index ind[],int &cont,struct Paciente pacientes[],struct Index ind_paciente[],struct Index ind_pacientesConsulta[],int cont_paciente,struct Medico medicos[],struct Index ind_medico[],int cont_medico,struct Index ind_medConsulta[],struct Cidade cidade[],struct Index ind_cidade[],int cont_cidade,struct CID cid[],struct Index ind_cid[],int cont_cid,struct Medicamento medicamentos[],struct Index ind_medicamento[],int cont_medicamento,struct EspecialidadeMedica esp[],struct Index ind_esp[],int cont_esp){
+	int cod=0;	
+	for(int x=1;x != -1;){
+		cout<<"\n\nAgendar uma nova Consulta "<< endl;
+		cout<<"Cod da Consulta: ";
+		cin>>consultas[cont].codigo_consulta;
+		cin.ignore();
+		if(busca(ind,cont,consultas[cont].codigo_consulta) == -1){
+			cod=consultas[cont].codigo_consulta;
+			cout<<"Codigo do Paciente: ";
+			cin>>consultas[cont].codigo_paciente;
+			cin.ignore();
+			int result_paciente = busca(ind_paciente,cont_paciente,consultas[cont].codigo_paciente);
+			int result_cidade = busca(ind_cidade,cont_cidade,pacientes[result_paciente].codigo_cidade);
+			cout<<"Nome Paciente: "<<pacientes[result_paciente].nome<<endl;
+			cout<<"Cidade: " << cidade[result_cidade].nome<< " | " << cidade[result_cidade].UF <<endl;
+			cout<<"Codigo do Medico: ";
+			cin>>consultas[cont].codigo_medico;
+			cin.ignore();
+			int result_medico = busca(ind_medico,cont_medico,consultas[cont].codigo_medico);
+			int result_esp = busca(ind_esp,cont_esp,medicos[result_medico].codigo_especialidade);
+			cout<<"Nome Medico: "<< medicos[result_medico].nome<<endl;
+			cout<<"Especialidade: "<< esp[result_esp].descricao<<endl;
+			cout<<"Codigo Cid: ";
+			cin>>consultas[cont].cod_CID;
+			cin.ignore();
+			int result_cid = busca(ind_cid,cont_cid,consultas[cont].cod_CID);
+			cout<<"CID: "<< cid[result_cid].descricao<<endl;
+			cout<<"Data da Consulta: ";
+			getline(cin,consultas[cont].data);
+			cout<<"Horario da Consulta: ";
+			getline(cin,consultas[cont].horario);
+			cout<<"Codigo do Medicamento: ";
+			cin>>consultas[cont].cod_medicamento;
+			cin.ignore();
+			int result_medicamento = busca(ind_medicamento,cont_medicamento,consultas[cont].cod_medicamento);
+			cout<<"Medicamento: "<< medicamentos[result_medicamento].descricao<<endl;
+			for(int m=1; m != -1;){
+				cout<<"Quantidade de Medicamento: ";
+				cin>>consultas[cont].qtde_medicamento;
+				if(medicamentos[result_medicamento].quant_estoque  < consultas[cont].qtde_medicamento){
+					cout<<"\n\n### Nao possui esta quantidade em estoque ###"<<endl;
+					cout<<"Quantidade em estoque: "<<medicamentos[result_medicamento].quant_estoque<<endl;
+				}
+				else{
+					medicamentos[result_medicamento].quant_estoque = medicamentos[result_medicamento].quant_estoque - consultas[cont].qtde_medicamento;
+					m= -1;
+				}
+			}
+			consultas[cont].status=0;
+			cout<<"\n### Agendamento Cadastrado com sucesso ###";
+			x= -1;  	
+		}
+		else{
+			cout<<"\n### Codigo ja existente ###";
+		}
+	}
+	
+	int i=0;
+	for(i=cont-1; i>= 0 && ind[i].codigo > cod ;i--){
+		ind[i+1].codigo = ind[i].codigo;
+		ind[i+1].endereco = ind[i].endereco;
+		ind_medConsulta[i+1].codigo = consultas[i].codigo_medico;
+		ind_medConsulta[i+1].endereco = ind[i].endereco;
+		ind_pacientesConsulta[i+1].codigo = consultas[i].codigo_paciente;
+		ind_pacientesConsulta[i+1].endereco = ind[i].endereco; 
+	}
+	
+	
+	ind_medConsulta[i+1].codigo = consultas[cont].codigo_medico;
+	ind_medConsulta[i+1].endereco = cont; 
+	ind_pacientesConsulta[i+1].codigo = consultas[cont].codigo_paciente;
+	ind_pacientesConsulta[i+1].endereco = cont;
+	ind[i+1].codigo = cod;
+	ind[i+1].endereco = cont;
+	cont++;
 }
 
+void mostrarConsulta(struct Consulta consultas[],struct Index ind[],int cont){
+	int con=0;
+	for(int x=1;x != -1;){
+		cout<<" Digite o Codigo da Consulta: ";
+		cin>>con;
+		if(con == 0 ){
+			x=-1;
+		}
+		else{
+		
+			if( busca(ind,cont,con) != -1){
+				int i = busca(ind,cont,con);
+				cout << "\n Codigo da Consulta: " << consultas[i].codigo_consulta<<endl;
+				cout << " Codigo Paciente: " << consultas[i].codigo_paciente<<endl;
+				cout << " Codigo Medico: " << consultas[i].codigo_medico<<endl;
+				cout << " Data: " << consultas[i].data<<endl;
+				cout << " Horario: " << consultas[i].horario<<endl;
+				cout << " Codigo CID: " << consultas[i].cod_CID<<endl;
+				cout << " Codigo Medicamento: " << consultas[i].cod_medicamento<<endl;
+				cout << " Quantidade de Medicamento: " << consultas[i].qtde_medicamento<<endl;
+				x=-1;
+			}
+			else{
+				cout<<"\n ### Codigo nao existente ### \n" <<endl;
+			}
+		}
+	}	
+}
 int busca (struct Index idx[], int cont, int cod){
     int i = 0, f = cont-1;
     int m = (i + f) / 2;
@@ -771,4 +918,36 @@ int busca (struct Index idx[], int cont, int cod){
     	return idx[m].endereco;
     }
     else return -1;
+}
+
+void reorganizacaoPaciente (struct Index idx[], struct Paciente pacientes[], int &cont){
+    struct Paciente novo_paciente[cont];
+	int j=-1;
+    for (int k=0; k < cont; k++){
+        int i = idx[k].endereco;
+        if (pacientes[i].status == 0){
+            j++;
+            novo_paciente[j] = pacientes[i];
+            idx[j].codigo = novo_paciente[j].codigo_paciente;
+            idx[j].endereco = j;
+        }
+    }
+    cont = j+1;
+    
+	for (int k = 0; k < cont; k++){
+    	int i = idx[k].endereco;
+    	pacientes[k] = novo_paciente[i];
+	}
+	cout<<"\n## Pacientes reorganizado ### "<<endl;
+	
+}
+
+void valorTotal(struct Consulta consultas[],int cont,struct Medicamento medicamento[],struct Index ind_medicamento[],int cont_medicamento){
+	int total= cont*100;
+	int soma=0;
+	for(int i=0;i<cont;i++){
+		int result = busca(ind_medicamento,cont_medicamento,consultas[i].cod_medicamento);
+		soma += consultas[i].qtde_medicamento * medicamento[result].preco_unitario;
+	}
+	cout<<"\n Valor Arecadado: "<<total+soma<<endl;	
 }
